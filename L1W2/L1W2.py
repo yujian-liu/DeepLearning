@@ -1,3 +1,4 @@
+# 用神经网络思想实现Logistic回归
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py

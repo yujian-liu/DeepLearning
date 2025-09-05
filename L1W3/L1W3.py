@@ -1,3 +1,4 @@
+# 用1层隐藏层的神经网络分类二维数据
 import numpy as np
 import matplotlib.pyplot as plt
 from testCases import *
