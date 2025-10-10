@@ -1,5 +1,5 @@
 import os
-from typing import Literal, Optional
+from typing import Literal, Optional, TypedDict
 
 from langgraph.constants import START, END
 from pydantic import BaseModel
@@ -161,28 +161,28 @@ router_prompt = ChatPromptTemplate.from_template(
 
 destination_names = ["DEFAULT"] + [p_info["name"] for p_info in prompt_infos]
 destinationType = Literal[tuple(destination_names)]
-class RouteQuery(BaseModel):
+class RouteQuery(TypedDict):
     destination: destinationType
 
 router_chain = router_prompt | llm.with_structured_output(RouteQuery, method="function_calling")
 
-class State(BaseModel):
-    input: Optional[str] = ""
-    destination: Optional[destinationType] = "DEFAULT"
-    answer: Optional[str] = ""
+class State(TypedDict):
+    input: str
+    destination: destinationType
+    answer: str
 
 def route_query(state: State):
-    response = router_chain.invoke({"input": state.input})
-    return {"destination": response.destination}
+    response = router_chain.invoke({"input": state["input"]})
+    return {"destination": response["destination"]}
 
 def prompt_factory(name):
     def method(state: State):
-        response = destination_chains[name].invoke({"input": state.input})
+        response = destination_chains[name].invoke({"input": state["input"]})
         return {"answer": response.content}
     return method
 
 def select_node(state: State) -> destinationType:
-    return state.destination
+    return state["destination"]
 
 graph = StateGraph(State)
 graph.add_node("route_query", route_query)
