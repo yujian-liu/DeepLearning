@@ -113,3 +113,9 @@ for chunk, metadata in app.stream(
 ):
     if isinstance(chunk, AIMessage):  # Filter to just model responses
         print(chunk.content, end="")
+
+# 将图像保存为文件
+with open("./img/memory_pic.png", "wb") as f:
+    f.write(app.get_graph().draw_mermaid_png())
+
+print("图像已保存")

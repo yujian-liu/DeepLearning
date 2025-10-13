@@ -202,3 +202,9 @@ print("-"*10)
 print(response)
 print(type(response))
 print(response["answer"])
+
+# 将图像保存为文件
+with open("./img/chain_pic.png", "wb") as f:
+    f.write(app.get_graph().draw_mermaid_png())
+
+print("图像已保存")
